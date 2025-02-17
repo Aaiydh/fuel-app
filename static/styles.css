@@ -1,0 +1,24 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f8f9fa;
+}
+
+h2, h4 {
+    color: #343a40;
+}
+
+button {
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+table {
+    margin-top: 10px;
+    width: 100%;
+}
