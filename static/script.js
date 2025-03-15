@@ -1,23 +1,30 @@
-function uploadFile() {
-    let file = $("#fileInput")[0].files[0];
+function uploadFiles() {
+    let files = $("#fileInput")[0].files;
     let formData = new FormData();
-    formData.append("file", file);
+
+    for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
+    }
 
     $("#uploadMessage").html("Uploading file... ⏳");
 
     $.ajax({
-        url: "/upload",
+        url: "http://127.0.0.1:5000/upload",  // ✅ Ensure correct URL
         type: "POST",
         data: formData,
         contentType: false,
         processData: false,
         success: function(response) {
             if (response.success) {
-                $("#uploadMessage").html("✅ File uploaded successfully!");
+                $("#uploadMessage").html("✅ Files uploaded successfully!");
                 displayPreview(response.preview);
             } else {
                 $("#uploadMessage").html("❌ Error: " + response.error);
             }
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.responseText);  // ✅ Log error details
+            $("#uploadMessage").html("❌ Upload failed! Check console for details.");
         }
     });
 }
@@ -25,13 +32,15 @@ function uploadFile() {
 function displayPreview(data) {
     let table = $("#previewTable");
     table.empty();
-    
+
     if (data.length === 0) {
         table.append("<tr><td>No data found</td></tr>");
         return;
     }
 
-    let headers = Object.keys(data[0]);
+    // ✅ Define the correct column order
+    let headers = ["Vehicle Number", "Total Price", "Station", "Date"];
+
     let headerRow = "<tr>";
     headers.forEach(header => {
         headerRow += `<th>${header}</th>`;
@@ -51,6 +60,7 @@ function displayPreview(data) {
     $("#previewTable").DataTable();
 }
 
+
 function applyFilter() {
     let filterVehicle = $("#filterVehicle").val().trim();
     let filterDate = $("#filterDate").val().trim();
@@ -61,10 +71,9 @@ function applyFilter() {
         return;
     }
 
-    let filename = $("#fileInput")[0].files[0] ? $("#fileInput")[0].files[0].name : null;
-
-    if (!filename) {
-        alert("⚠️ No uploaded file detected. Please upload an Excel file first.");
+    let files = $("#fileInput")[0].files;
+    if (files.length === 0) {
+        alert("⚠️ No uploaded files detected. Please upload Excel files first.");
         return;
     }
 
@@ -73,7 +82,6 @@ function applyFilter() {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-            filename: filename,
             filters: {
                 "Vehicle Number": filterVehicle,
                 "Date": filterDate,
@@ -98,11 +106,12 @@ function displayFilteredData(data) {
     table.empty();
 
     if (data.length === 0) {
-        table.append("<tr><td>No data found</td></tr>");
+        table.append("<tr><td colspan='4'>No data found</td></tr>");
         return;
     }
 
-    let headers = Object.keys(data[0]);
+    let headers = ["Vehicle Number", "Total Price", "Station", "Date"];
+
     let headerRow = "<tr>";
     headers.forEach(header => {
         headerRow += `<th>${header}</th>`;
@@ -110,19 +119,38 @@ function displayFilteredData(data) {
     headerRow += "</tr>";
     table.append(headerRow);
 
+    let totalPrice = 0;
+
     data.forEach(row => {
         let rowHTML = "<tr>";
         headers.forEach(header => {
             rowHTML += `<td>${row[header]}</td>`;
         });
         rowHTML += "</tr>";
+
+        // ✅ Add up total price
+        totalPrice += parseFloat(row["Total Price"]) || 0;
         table.append(rowHTML);
     });
+
+    // ✅ Add total price row
+    let totalRow = `<tr style="font-weight:bold;">
+        <td colspan="1">Total</td>
+        <td>${totalPrice.toFixed(2)}</td>
+        <td colspan="2"></td>
+    </tr>`;
+    table.append(totalRow);
 
     $("#filteredTable").DataTable();
 }
 
-
 function downloadCSV() {
-    window.location.href = "/download";
+    let filterVehicle = $("#filterVehicle").val().trim();
+
+    if (!filterVehicle) {
+        alert("⚠️ Please enter a Vehicle Number before downloading.");
+        return;
+    }
+
+    window.location.href = `/download?vehicle=${encodeURIComponent(filterVehicle)}`;
 }
