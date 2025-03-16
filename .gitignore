@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+env/
+
+# Logs
+*.log
+
+# Uploaded & processed files
+uploads/
+processed/
+
+# System files
+.DS_Store
+
+# IDE files
+.vscode/
+.idea/
