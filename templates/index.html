@@ -4,22 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fuel App - Data Analysis</title>
-    <!-- <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon"> -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- DataTables for Interactive Tables -->
+    <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="/static/styles.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/static/favicon" type="image/x-icon">
 </head>
 <body class="container mt-4">
+
     <h2 class="text-center">Fuel App - Data Analysis</h2>
 
     <!-- File Upload Section -->
     <div class="card p-3 shadow-sm">
         <h4>Upload Excel File</h4>
-        <input type="file" id="fileInput" class="form-control mb-2" multiple>
+        <input type="file" id="fileInput" class="form-control mb-2">
         <button class="btn btn-primary" onclick="uploadFiles()">Upload</button>
         <div id="uploadMessage" class="mt-2 text-success"></div>
     </div>
@@ -40,12 +48,6 @@
             <div class="col-md-4">
                 <input type="text" id="filterVehicle" class="form-control" placeholder="Search Vehicle Number">
             </div>
-            <div class="col-md-4">
-                <input type="text" id="filterDate" class="form-control" placeholder="Search Date">
-            </div>
-            <div class="col-md-4">
-                <input type="text" id="filterStation" class="form-control" placeholder="Search Station">
-            </div>
         </div>
         <button class="btn btn-success mt-2" onclick="applyFilter()">Apply Filters</button>
     </div>
@@ -59,18 +61,20 @@
         </table>
     </div>
 
-    <!-- Summary Box Section -->
-    <div class="card mt-4 p-3 shadow-sm" id="summaryBox" style="display: none;">
+    <!-- Summary Box -->
+    <div class="card mt-4 p-3 shadow-sm" id="summaryBox">
         <h4>Summary</h4>
         <p><strong>Total Price:</strong> <span id="totalPriceSummary"></span> AED</p>
         <p><strong>Total Records:</strong> <span id="totalRecordsSummary"></span></p>
     </div>
-    
+
     <button class="btn btn-info mt-2" onclick="downloadCSV()">Download CSV</button>
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="/static/script.js"></script>
+
 </body>
 </html>
+
