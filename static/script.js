@@ -9,7 +9,7 @@ function uploadFiles() {
     $("#uploadMessage").html("Uploading file... ⏳");
 
     $.ajax({
-        url: "http://127.0.0.1:5000/upload",  // ✅ Ensure correct URL
+        url: "/upload",
         type: "POST",
         data: formData,
         contentType: false,
@@ -23,7 +23,7 @@ function uploadFiles() {
             }
         },
         error: function(xhr, status, error) {
-            console.log(xhr.responseText);  // ✅ Log error details
+            console.log(xhr.responseText);
             $("#uploadMessage").html("❌ Upload failed! Check console for details.");
         }
     });
@@ -38,7 +38,6 @@ function displayPreview(data) {
         return;
     }
 
-    // ✅ Define the correct column order
     let headers = ["Vehicle Number", "Total Price", "Station", "Date"];
 
     let headerRow = "<tr>";
@@ -51,7 +50,7 @@ function displayPreview(data) {
     data.forEach(row => {
         let rowHTML = "<tr>";
         headers.forEach(header => {
-            rowHTML += `<td>${row[header]}</td>`;
+            rowHTML += `<td>${row[header] || "N/A"}</td>`;
         });
         rowHTML += "</tr>";
         table.append(rowHTML);
@@ -60,20 +59,11 @@ function displayPreview(data) {
     $("#previewTable").DataTable();
 }
 
-
 function applyFilter() {
     let filterVehicle = $("#filterVehicle").val().trim();
-    let filterDate = $("#filterDate").val().trim();
-    let filterStation = $("#filterStation").val().trim();
 
-    if (filterVehicle === "" && filterDate === "" && filterStation === "") {
-        alert("⚠️ Please enter at least one filter value.");
-        return;
-    }
-
-    let files = $("#fileInput")[0].files;
-    if (files.length === 0) {
-        alert("⚠️ No uploaded files detected. Please upload Excel files first.");
+    if (!filterVehicle) {
+        alert("⚠️ Please enter a Vehicle Number.");
         return;
     }
 
@@ -82,27 +72,34 @@ function applyFilter() {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-            filters: {
-                "Vehicle Number": filterVehicle,
-                "Date": filterDate,
-                "Station": filterStation
-            }
+            filters: { "Vehicle Number": filterVehicle }
         }),
-        success: function(response) {
+        success: function (response) {
             if (response.success) {
                 displayFilteredData(response.filtered_data);
+                $("#summaryBox").show();
+                $("#totalPriceSummary").text(response.total_price.toFixed(2));
+                $("#totalRecordsSummary").text(response.filtered_data.length);
             } else {
                 alert("❌ Error: " + response.error);
+                $("#summaryBox").hide();
             }
         },
         error: function() {
             alert("❌ Something went wrong while filtering data.");
+            $("#summaryBox").hide();
         }
     });
 }
 
 function displayFilteredData(data) {
     let table = $("#filteredTable");
+
+    // // ✅ Destroy existing DataTable if exists
+    // if ( $.fn.DataTable.isDataTable("#filteredTable") ) {
+    //     table.DataTable().destroy();
+    // }
+
     table.empty();
 
     if (data.length === 0) {
@@ -124,16 +121,14 @@ function displayFilteredData(data) {
     data.forEach(row => {
         let rowHTML = "<tr>";
         headers.forEach(header => {
-            rowHTML += `<td>${row[header]}</td>`;
+            rowHTML += `<td>${row[header] || "N/A"}</td>`;
         });
         rowHTML += "</tr>";
 
-        // ✅ Add up total price
         totalPrice += parseFloat(row["Total Price"]) || 0;
         table.append(rowHTML);
     });
 
-    // ✅ Add total price row
     let totalRow = `<tr style="font-weight:bold;">
         <td colspan="1">Total</td>
         <td>${totalPrice.toFixed(2)}</td>

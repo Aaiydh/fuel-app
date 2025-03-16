@@ -161,15 +161,11 @@ def filter_data():
 
     df = df.fillna("N/A")
 
-    # ✅ Ensure correct order
-    df = df[["Vehicle Number", "Total Price", "Station", "Date"]]
-
-    response_data = {
+    return jsonify({
+        "success": True,
         "filtered_data": df.to_dict(orient="records"),
         "total_price": total_price
-    }
-
-    return jsonify({"success": True, **response_data})
+    })
 
 @app.route("/download")
 def download_file():
