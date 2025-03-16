@@ -1,21 +1,30 @@
+/* General Styling */
 body {
-    background-color: #f7f9fc;
-    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin: 20px;
+}
+
+h2, h4 {
+    font-weight: bold;
+    color: #007bff;
 }
 
 .card {
-    background: white;
+    background: #ffffff;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     margin-bottom: 20px;
 }
 
+/* Buttons */
 button, .btn {
     border-radius: 8px;
     padding: 10px 20px;
-    font-weight: bold;
-    transition: 0.3s ease;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
 button:hover, .btn:hover {
@@ -23,6 +32,7 @@ button:hover, .btn:hover {
     color: white;
 }
 
+/* Tables */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -49,9 +59,24 @@ tr:nth-child(even) {
     background-color: #ffc107;
 }
 
+/* Summary Box */
 #summaryBox {
-    background-color: #f8f9fa;
+    background-color: #f1f3f5;
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: none;
 }
+
+/* Inputs */
+input[type="text"], input[type="file"] {
+    border-radius: 6px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+/* Add smooth transitions */
+.card, button, table, input {
+    transition: all 0.3s ease-in-out;
+}
+
